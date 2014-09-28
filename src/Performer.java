@@ -60,6 +60,16 @@ public class Performer {
 		}
 	}
 	
+	private static double calc(double x, String unOp){
+		switch(unOp){
+		case "sin": return Math.sin(x);
+		case "cos": return Math.cos(x);
+		case "tan": return Math.tan(x);
+		case "ctg": return Math.tanh(x);
+		default: return 0;
+		}
+	}
+	
 	static Stack<String> divide(String in) throws InputException {
 		Stack<String> out = new Stack<String>();
 		for (int i = 0; i<in.length(); ){
@@ -93,7 +103,7 @@ public class Performer {
 		return inputStack;
 	}
 	
-	public Stack<String> split(String in) throws InputException {
+	private  Stack<String> split(String in) throws InputException {     
 		Stack<String> inputString = divide(in);
 		Stack<String> outputString = new Stack<String>();
 		Stack<String> store = new Stack<String>();
@@ -117,7 +127,7 @@ public class Performer {
 				if (isBkt(inputString.peek().charAt(0))) {
 					if (inputString.peek().equals("(")) {
 						store.push(inputString.pop());
-					} else {                                            // catch infinity here
+					} else {                                                // catch infinity here
 						while(!store.peek().equals("(")) {
 							outputString.push(store.pop());
 						}
@@ -130,5 +140,18 @@ public class Performer {
 			outputString.push(store.pop());
 		}
 		return outputString;
+	}
+	
+	public void interpretation(String in) throws InputException {
+		Stack<String> poliz = split(in);
+		Stack<Double> out = new Stack<Double>();
+		while(!poliz.empty()){
+			if(Character.isDigit(poliz.peek().charAt(0))) {
+				out.push(Double.valueOf(poliz.pop()));
+			} else if (isUnOp(poliz.peek())) {
+				Double dig = out.pop();
+				out.push(calc(dig, poliz.pop()));
+			}
+		}
 	}
 }
