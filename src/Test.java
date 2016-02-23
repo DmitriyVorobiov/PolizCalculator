@@ -1,5 +1,7 @@
 import java.util.Stack;
 
+import exception.InputException;
+
 public class Test {
 
 	public Test() {
@@ -9,18 +11,18 @@ public class Test {
 	public static void main(String[] args) {
 		Stack<String> out = null;
 		String sss = "";
-		String input = "4*(   - 1  +4)/2";
+		String input = "1 +3 * 2";
 		double res = 0;
 		try {
 			out = PolizCalculator.convertToPolish(input);
-			 res = PolizCalculator.interpretation(input);
+			res = PolizCalculator.interpretation(input);
 		} catch (InputException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		while (!out.empty()) {
-			sss += out.pop() + " ";
-		}
+//		while (!out.empty()) {
+//			sss += out.pop() + " ";
+//		}
 		sss = String.valueOf(res);
 
 		/**

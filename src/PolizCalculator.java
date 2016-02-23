@@ -1,16 +1,13 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import exception.InputException;
+
 public class PolizCalculator {
 
-
-
-	static ArrayList<String> splitForExpressonsArray(String input) throws InputException {
-		ArrayList<String> lst = new ArrayList<String>();
+	static Stack<String> splitForExpressonsArray(String input) throws InputException {
+		Stack<String> lst = new Stack<String>();
 		String in = Utils.getValidForm(input);
 		Matcher m = Pattern.compile("\\d+(?:\\.\\d+)?|[a-zA-Z]+|[^\\s\\w\\.]").matcher(in);
 		while (m.find()) {
@@ -23,44 +20,11 @@ public class PolizCalculator {
 		Stack<String> inputString = new Stack<String>();
 		Stack<String> outputString = new Stack<String>();
 		Stack<String> store = new Stack<String>();
-		
-		inputString.addAll(splitForExpressonsArray(in));
-		/**
-		while (!inputString.empty()) {
-			if (Character.isDigit(inputString.peek().charAt(0))) {
-				outputString.push(inputString.pop());
-			} else if (isUnarOperator(inputString.peek())) {
-				outputString.push(inputString.pop());
-			} else if (isBinaryOperator(inputString.peek())) {
-				if (store.isEmpty()) {
-					store.push(inputString.pop());
-				} else if (getComparPriority(inputString.peek()) > getStorePriority(store.peek())) {
-					store.push(inputString.pop());
-				} else {
-					outputString.push(store.pop());
-				}
-			} else if (isBracket(inputString.peek())) {
-				if (inputString.peek().equals("(")) {
-					store.push(inputString.pop());
-				} else {
-					// TODO catch infinity here
-					while (!store.peek().equals("(")) {
-						outputString.push(store.pop());
-					}
-					store.pop();
-					inputString.pop();
-				}
-			}
-		}
-		while (!store.isEmpty()) {
-			outputString.push(store.pop());
-		}
-		*/
-		
+		inputString.addAll(reverse(splitForExpressonsArray(in)));
 		while (!inputString.empty()) {
 			if (ExpressionElement.isNumber(inputString.peek()) || ExpressionElement.isUnarOperator(inputString.peek())) {
 				outputString.push(inputString.pop());
-			}  else if (ExpressionElement.isBinaryOperator(inputString.peek())) {
+			} else if (ExpressionElement.isBinaryOperator(inputString.peek())) {
 				if (store.isEmpty()) {
 					store.push(inputString.pop());
 				} else if (ExpressionElement.getComparPriority(inputString.peek()) > ExpressionElement.getStorePriority(store.peek())) {
@@ -72,7 +36,6 @@ public class PolizCalculator {
 				if (inputString.peek().equals("(")) {
 					store.push(inputString.pop());
 				} else {
-					// TODO catch infinity here. or not?
 					while (!store.peek().equals("(")) {
 						outputString.push(store.pop());
 					}
@@ -84,7 +47,6 @@ public class PolizCalculator {
 		while (!store.isEmpty()) {
 			outputString.push(store.pop());
 		}
-		
 		return outputString;
 	}
 
@@ -92,13 +54,12 @@ public class PolizCalculator {
 		Stack<String> poliz = reverse(convertToPolish(in));
 		Stack<Double> out = new Stack<Double>();
 		while (!poliz.empty()) {
-			if (Character.isDigit(poliz.peek().charAt(0))) {
+			if (ExpressionElement.isNumber(poliz.peek())) {
 				out.push(Double.valueOf(poliz.pop()));
 			} else if (ExpressionElement.isUnarOperator(poliz.peek())) {
 				Double dig = out.pop();
 				out.push(ExpressionElement.calcUnOp(dig, poliz.pop()));
 			} else if (ExpressionElement.isBinaryOperator(poliz.peek())) {
-				// TODO NEG
 				char operator = poliz.pop().charAt(0);
 				Double dig = out.pop();
 				Double dig2 = out.pop();

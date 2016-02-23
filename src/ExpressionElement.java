@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ExpressionElement {
 
@@ -17,7 +18,6 @@ public class ExpressionElement {
 	static boolean isUnarOperator(String s) {
 		List<String> operators = Arrays.asList("sin", "cos", "tan", "ctg");
 		return operators.contains(s);
-
 	}
 
 	static int getComparPriority(String s) {
@@ -34,6 +34,14 @@ public class ExpressionElement {
 			return 3;
 		case "/":
 			return 3;
+		case "sin":
+			return 4;
+		case "cos":
+			return 4;
+		case "tan":
+			return 4;
+		case "ctg":
+			return 4;
 		default:
 			return 0;
 		}
@@ -49,6 +57,14 @@ public class ExpressionElement {
 			return 2;
 		case "*":
 			return 3;
+		case "sin":
+			return 4;
+		case "cos":
+			return 4;
+		case "tan":
+			return 4;
+		case "ctg":
+			return 4;
 		case "/":
 			return 3;
 		default:
@@ -87,7 +103,8 @@ public class ExpressionElement {
 	}
 
 	public static boolean isNumber(String peek) {
-		// TODO Auto-generated method stub
-		return false;
+		Pattern p = Pattern.compile("[0-9]*\\.?[0-9]");
+		Matcher m = p.matcher(peek);
+		return m.matches();
 	}
 }
